@@ -8,14 +8,14 @@
 import Foundation
 
 struct Meal: Identifiable {
-    let id: Int
+    let id: String
     let name: String
-    let imgUrl: URL?
+    let imgUrl: URL
     
     static let preview: [Meal] = {
         (0..<9).map { _ in
             let id = Int.random(in: 0...99999)
-            return Meal(id: id, name: "Name \(id)", imgUrl: nil)
+            return Meal(id: "\(id)", name: "Name \(id)", imgUrl: URL(string: "https:/www.themealdb.com/images/media/meals/adxcbq1619787919.jpg")!)
         }
     }()
 }

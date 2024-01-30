@@ -19,7 +19,7 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
     func getRecipes() async throws -> [Meal] {
         do {
             let (data, response) = try await networkClient.load(url: makeListUrl())
-            return try handle(data: data, response: response)
+            return try await handle(data: data, response: response)
         } catch {
             throw RepositoryError.networkError(error)
         }
@@ -31,10 +31,10 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
     
     private func makeListUrl() -> URL {
         var components = makeUrlComponents()
-        let queryItem = URLQueryItem(name: Constants.categoryName, value: Constants.categoryFilterParamName)
-        components.queryItems?.append(queryItem)
+        let queryItem = URLQueryItem(name: Constants.categoryFilterParamName, value: Constants.categoryName)
+        components.queryItems = [queryItem]
         
-        guard let urlString = components.string, let result = URL(string: urlString) else {
+        guard let result = components.url else {
             fatalError("failed to create recipes URL from components: \(components)")
         }
         
@@ -49,7 +49,7 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
         return urlComponents
     }
     
-    private func handle(data: Data, response: URLResponse) throws -> [Meal] {
+    private func handle(data: Data, response: URLResponse) async throws -> [Meal] {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw RepositoryError.generalError
         }
@@ -59,9 +59,11 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
             throw RepositoryError.badResponseCode(statusCode)
         }
         
+        let dataString = String(data: data, encoding: .utf8)
+        
         do {
-            let result = try decoder.decode([Meal].self, from: data)
-            return result
+            let result = try decoder.decode(RecipesListResponse.self, from: data)
+            return result.meals
         } catch {
             throw RepositoryError.decodingError(error)
         }
@@ -79,6 +81,10 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
         case generalError
         case decodingError(Error)
     }
+}
+
+struct RecipesListResponse: Decodable {
+    let meals: [Meal]
 }
 
 final class NetworkClient {
