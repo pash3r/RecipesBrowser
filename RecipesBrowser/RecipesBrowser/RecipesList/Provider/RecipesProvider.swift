@@ -25,6 +25,10 @@ final class RecipesProvider: ObservableObject {
         state = .loading
         do {
             let recipes = try await repository.getRecipes()
+                .sorted(by: { meal1, meal2 in
+                    meal1.name < meal2.name
+                })
+            
             state = .loadedRecipes(recipes)
         } catch {
             state = .error(error)
