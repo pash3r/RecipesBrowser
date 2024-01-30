@@ -18,31 +18,40 @@ struct RecipesListView: View {
     
     var body: some View {
         NavigationStack {
-            switch viewModel.state {
-            case .initial:
-                EmptyView()
-            case .loading:
-                ProgressView()
-            case .loadedRecipes(let array):
-                List(array, id: \.id) { item in
-                    NavigationLink {
-                        Text("\(item.name)")
-                    } label: {
-                        RecipeListRowView(item: item)
-                    }
-
-                }
-            case .error(let text):
-                ErrorRetryView(text: text) {
-                    Task {
-                        await recipesProvider.reloadRecipes()
-                    }
-                }
-            }
+            makeContent()
+                .navigationTitle(viewModel.navigationTitle)
         }
-        .navigationTitle(viewModel.navigationTitle)
         .task {
             await recipesProvider.loadRecipes()
+        }
+    }
+    
+    @ViewBuilder
+    private func makeContent() -> some View {
+        switch viewModel.state {
+        case .initial:
+            EmptyView()
+        case .loading:
+            ProgressView()
+        case .loadedRecipes(let array):
+            List(array, id: \.id) { item in
+                NavigationLink {
+                    Text("\(item.name)")
+                } label: {
+                    RecipeListRowView(item: item)
+                }
+
+            }
+        case .error(let text):
+            makeErrorView(with: text)
+        }
+    }
+    
+    private func makeErrorView(with text: String) -> some View {
+        ErrorRetryView(text: text) {
+            Task {
+                await recipesProvider.reloadRecipes()
+            }
         }
     }
 }
