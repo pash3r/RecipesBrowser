@@ -118,8 +118,6 @@
 		37919F7D2B6872BB00C7495D /* Provider */ = {
 			isa = PBXGroup;
 			children = (
-				37919F7E2B6872C100C7495D /* RecipesRepository.swift */,
-				37919F802B6872F900C7495D /* RecipesNetworkRepository.swift */,
 				37919F822B68745F00C7495D /* RecipesProvider.swift */,
 			);
 			path = Provider;
@@ -128,6 +126,7 @@
 		37919F842B6878C600C7495D /* General */ = {
 			isa = PBXGroup;
 			children = (
+				37D027ED2B68C6AE00CB016F /* Repository */,
 				37919F852B6878D400C7495D /* View */,
 			);
 			path = General;
@@ -164,6 +163,15 @@
 				37919F8D2B689A6800C7495D /* RecipeDetailsProvider.swift */,
 			);
 			path = Provider;
+			sourceTree = "<group>";
+		};
+		37D027ED2B68C6AE00CB016F /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				37919F7E2B6872C100C7495D /* RecipesRepository.swift */,
+				37919F802B6872F900C7495D /* RecipesNetworkRepository.swift */,
+			);
+			path = Repository;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
