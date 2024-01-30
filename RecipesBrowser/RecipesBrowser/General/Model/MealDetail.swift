@@ -34,17 +34,17 @@ extension MealDetail {
             return nil
         }
         
-        guard let id = rawValue[CodingKeys.id.rawValue],
-              let name = rawValue[CodingKeys.name.rawValue],
-              let instructions = rawValue[CodingKeys.instructions.rawValue],
-              let imgUrlString = rawValue[CodingKeys.imgUrl.rawValue] else {
+        guard let id = rawValue[CodingKeys.id.rawValue], let id,
+              let name = rawValue[CodingKeys.name.rawValue], let name,
+              let instructions = rawValue[CodingKeys.instructions.rawValue], let instructions,
+              let imgUrlString = rawValue[CodingKeys.imgUrl.rawValue], let imgUrlString else {
             return nil
         }
         
-        self.id = id!
-        self.name = name!
-        self.instructions = instructions!
-        self.imgUrl = URL(string: imgUrlString!)
+        self.id = id
+        self.name = name
+        self.instructions = instructions
+        self.imgUrl = URL(string: imgUrlString)
         
         var ingredientKeys = [String]()
         var measurementKeys = [String]()
@@ -64,7 +64,9 @@ extension MealDetail {
         }
         
         zip(ingredientKeys, measurementKeys).forEach { ingredient, measurement in
-            ingredients.append(Ingredient(name: ingredient, value: measurement))
+            if let name = rawValue[ingredient], let name, let value = rawValue[measurement], let value {
+                ingredients.append(Ingredient(name: name, value: value))
+            }
         }
         
         self.ingredients = ingredients
