@@ -12,7 +12,9 @@ struct ErrorRetryView: View {
     let action: (() -> Void)?
     
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
+            Text("Oops ⚠️")
+                .font(.title2)
             Text(text)
                 .multilineTextAlignment(.center)
             Button("Reload") {
