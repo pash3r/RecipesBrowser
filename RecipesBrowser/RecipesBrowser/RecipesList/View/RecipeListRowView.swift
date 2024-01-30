@@ -43,6 +43,8 @@ struct RecipeListRowView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     RecipeListRowView(item: Meal.preview.first!)
 }
+#endif
