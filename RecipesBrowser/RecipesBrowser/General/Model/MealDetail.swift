@@ -22,7 +22,8 @@ struct MealDetail {
         self.ingredients = ingredients
     }
     
-    struct Ingredient {
+    struct Ingredient: Identifiable {
+        let id = UUID()
         let name: String
         let value: String
     }
