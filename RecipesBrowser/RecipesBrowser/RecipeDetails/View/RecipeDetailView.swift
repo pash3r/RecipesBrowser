@@ -21,25 +21,18 @@ struct RecipeDetailView: View {
                 ProgressView()
             case .loaded(let mealDetail):
                 ScrollView {
-                    VStack {
-                        AsyncImage(url: mealDetail.imgUrl) { imgPhase in
-                            switch imgPhase {
-                            case .empty:
-                                ProgressView()
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            case .failure:
-                                Image(systemName: "fork.knife.circle")
-                            @unknown default:
-                                Image(systemName: "fork.knife.circle")
-                            }
+                    makeImage(with: mealDetail.imgUrl)
+                    
+                    VStack(alignment: .leading) {
+                        makeTitleAndInstructions(with: mealDetail)
+                            .padding(.bottom, Constants.verticalPadding)
+                        Text(viewModel.ingredientsTitle)
+                            .font(.title3)
+                        ForEach(mealDetail.ingredients) { item in
+                            IngredientView(ingredient: item)
                         }
-                        
-                        Text(mealDetail.name)
-                        Text(mealDetail.instructions)
                     }
+                    .padding([.leading, .trailing, .bottom], Constants.verticalPadding)
                 }
             case .error(let text):
                 ErrorRetryView(text: text) {
@@ -55,10 +48,51 @@ struct RecipeDetailView: View {
             await provider.loadRecipe(with: recipeId)
         }
     }
+    
+    func makeTitleAndInstructions(with model: MealDetail) -> some View {
+        VStack(spacing: Constants.verticalPadding) {
+            Text(model.name)
+                .font(.title)
+            
+            Text(viewModel.instructionsTitle)
+                .font(.title3)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Text(model.instructions)
+        }
+    }
+    
+    func makeImage(with url: URL?) -> some View {
+        AsyncImage(url: url) { imgPhase in
+            switch imgPhase {
+            case .empty:
+                ProgressView()
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            case .failure:
+                makeImgPlaceholder()
+            @unknown default:
+                makeImgPlaceholder()
+            }
+        }
+    }
+    
+    func makeImgPlaceholder() -> some View {
+        Image(systemName: "fork.knife.circle")
+    }
+    
+    private struct Constants {
+        static let verticalPadding: CGFloat = 12
+    }
 }
 
 private extension RecipeDetailView {
     struct ViewModel {
+        let instructionsTitle: String = "Instructions:"
+        let ingredientsTitle: String = "Ingredients:"
+        
         func state(from provider: RecipeDetailsProvider) -> State {
             let result: State
             switch provider.state {
@@ -68,8 +102,8 @@ private extension RecipeDetailView {
                 result = .loading
             case .loaded(let recipe):
                 result = .loaded(recipe)
-            case .error(let text):
-                result = .error(text)
+            case .error:
+                result = .error("Something went wrong") // use default error text
             }
             
             return result
