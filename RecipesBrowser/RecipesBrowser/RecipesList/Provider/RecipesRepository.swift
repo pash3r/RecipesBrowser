@@ -9,5 +9,5 @@ import Foundation
 
 protocol RecipesRepositoryDescription {
     func getRecipes() async throws -> [Meal]
-    func getRecipe(with id: String) async throws -> Meal
+    func getRecipe(with id: String) async throws -> MealDetail
 }

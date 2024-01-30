@@ -19,23 +19,40 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
     func getRecipes() async throws -> [Meal] {
         do {
             let (data, response) = try await networkClient.load(url: makeListUrl())
-            return try await handle(data: data, response: response)
+            return try await handleList(data: data, response: response)
         } catch {
             throw RepositoryError.networkError(error)
         }
     }
     
-    func getRecipe(with id: String) async throws -> Meal {
-        Meal.preview.first!
+    @MainActor
+    func getRecipe(with id: String) async throws -> MealDetail {
+        do {
+            let (data, response) = try await networkClient.load(url: makeDetailsUrl(with: id))
+            return try await handleDetails(data: data, response: response)
+        } catch {
+            throw RepositoryError.networkError(error)
+        }
     }
     
     private func makeListUrl() -> URL {
-        var components = makeUrlComponents()
-        let queryItem = URLQueryItem(name: Constants.categoryFilterParamName, value: Constants.categoryName)
+        var components = makeListUrlComponents()
+        let queryItem = URLQueryItem(name: Constants.categoryQueryFilterParamName, value: Constants.categoryName)
         components.queryItems = [queryItem]
         
         guard let result = components.url else {
             fatalError("failed to create recipes URL from components: \(components)")
+        }
+        
+        return result
+    }
+    
+    private func makeDetailsUrl(with id: String) -> URL {
+        var components = makeDetailsUrlComponents()
+        components.queryItems = [URLQueryItem(name: Constants.detailsQueryParamName, value: id)]
+        
+        guard let result = components.url else {
+            fatalError("fatal error: Failed to create URL components for recipe details with id \(id)")
         }
         
         return result
@@ -49,17 +66,22 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
         return urlComponents
     }
     
-    private func handle(data: Data, response: URLResponse) async throws -> [Meal] {
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw RepositoryError.generalError
-        }
+    private func makeListUrlComponents() -> URLComponents {
+        var urlComponents = makeUrlComponents()
+        urlComponents.path += Constants.categoriesPathComponent
         
-        let statusCode = httpResponse.statusCode
-        guard (0...200).contains(statusCode) else {
-            throw RepositoryError.badResponseCode(statusCode)
-        }
+        return urlComponents
+    }
+    
+    private func makeDetailsUrlComponents() -> URLComponents {
+        var components = makeUrlComponents()
+        components.path += Constants.detailsPathComponent
         
-        let dataString = String(data: data, encoding: .utf8)
+        return components
+    }
+    
+    private func handleList(data: Data, response: URLResponse) async throws -> [Meal] {
+        try handle(response: response)
         
         do {
             let result = try decoder.decode(RecipesListResponse.self, from: data)
@@ -69,10 +91,39 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
         }
     }
     
+    private func handleDetails(data: Data, response: URLResponse) async throws -> MealDetail {
+        try handle(response: response)
+        
+        do {
+            let parsedResponse = try decoder.decode(RecipeDetailsResponse.self, from: data)
+            guard let details = parsedResponse.mealDetails else {
+                throw RepositoryError.emptyResponse
+            }
+            
+            return details
+        } catch {
+            throw RepositoryError.decodingError(error)
+        }
+    }
+    
+    private func handle(response: URLResponse) throws {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw RepositoryError.generalError
+        }
+        
+        let statusCode = httpResponse.statusCode
+        guard (0...200).contains(statusCode) else {
+            throw RepositoryError.badResponseCode(statusCode)
+        }
+    }
+    
     private struct Constants {
-        static let baseUrl: URL = URL(string: "https://themealdb.com/api/json/v1/1/filter.php")!
-        static let categoryFilterParamName: String = "c"
+        static let baseUrl: URL = URL(string: "https://themealdb.com/api/json/v1/1/")!
+        static let categoriesPathComponent: String = "filter.php"
+        static let categoryQueryFilterParamName: String = "c"
         static let categoryName = "Dessert"
+        static let detailsPathComponent: String = "lookup.php"
+        static let detailsQueryParamName: String = "i"
     }
     
     enum RepositoryError: Error {
@@ -80,11 +131,21 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
         case badResponseCode(Int)
         case generalError
         case decodingError(Error)
+        case emptyResponse
     }
-}
 
-struct RecipesListResponse: Decodable {
-    let meals: [Meal]
+    struct RecipesListResponse: Decodable {
+        let meals: [Meal]
+    }
+    
+    struct RecipeDetailsResponse: Decodable {
+        let meals: [[String: String?]]
+
+        var mealDetails: MealDetail? {
+            MealDetail(rawValue: meals.first)
+        }
+    }
+    
 }
 
 final class NetworkClient {

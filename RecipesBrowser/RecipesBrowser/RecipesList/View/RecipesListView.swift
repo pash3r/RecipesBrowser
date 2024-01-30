@@ -36,7 +36,7 @@ struct RecipesListView: View {
         case .loadedRecipes(let array):
             List(array, id: \.id) { item in
                 NavigationLink {
-                    Text("\(item.name)")
+                    RecipeDetailView(recipeId: item.id)
                 } label: {
                     RecipeListRowView(item: item)
                 }
@@ -94,8 +94,8 @@ private class RecipesRepositoryMock: RecipesRepositoryDescription {
         return Meal.preview
     }
     
-    func getRecipe(with id: String) async throws -> Meal {
-        Meal.preview.first!
+    func getRecipe(with id: String) async throws -> MealDetail {
+        MealDetail.preview
     }
 }
 

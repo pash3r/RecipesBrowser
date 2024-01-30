@@ -1,5 +1,5 @@
 //
-//  RecipesProvider.swift
+//  RecipeDetailsProvider.swift
 //  RecipesBrowser
 //
 //  Created by Pavel Tikhonov on 1/29/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class RecipesProvider: ObservableObject {
+final class RecipeDetailsProvider: ObservableObject {
     @Published private(set) var state: State = .initial
     
     private let repository: RecipesRepositoryDescription
@@ -17,29 +17,25 @@ final class RecipesProvider: ObservableObject {
     }
     
     @MainActor
-    func loadRecipes() async {
+    func loadRecipe(with id: String) async {
         state = .loading
+        
         do {
-            let recipes = try await repository.getRecipes()
-                .sorted(by: { meal1, meal2 in
-                    meal1.name < meal2.name
-                })
-            
-            state = .loadedRecipes(recipes)
+            let recipe = try await repository.getRecipe(with: id)
+            state = .loaded(recipe)
         } catch {
-            state = .error(error)
+            state = .error("Something went wrong") // move to app constants
         }
     }
     
-    @MainActor
-    func reloadRecipes() async {
-        await loadRecipes()
+    func retry(with id: String) async {
+        await loadRecipe(with: id)
     }
     
     enum State {
         case initial
         case loading
-        case loadedRecipes([Meal])
-        case error(Error)
+        case loaded(MealDetail)
+        case error(String)
     }
 }

@@ -9,14 +9,13 @@ import SwiftUI
 
 @main
 struct RecipesBrowserApp: App {
-    @StateObject private var recipesProvider: RecipesProvider = {
-        let repository = RecipesNetworkRepository()
-        return RecipesProvider(repository: repository)
-    }()
-    
+    @StateObject private var recipesProvider: RecipesProvider = RecipesProvider()
+    private let detailsProvider = RecipeDetailsProvider()
+            
     var body: some Scene {
         WindowGroup {
             RecipesListView(recipesProvider: recipesProvider)
+                .environmentObject(detailsProvider)
         }
     }
 }
