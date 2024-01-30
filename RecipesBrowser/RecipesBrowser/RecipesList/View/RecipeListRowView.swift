@@ -25,14 +25,21 @@ struct RecipeListRowView: View {
                     imgPlaceholder
                 }
             }
-            .frame(width: 50, height: 50)
+            .clipShape(RoundedRectangle(cornerSize: Constants.imageCornerSize))
+            .frame(width: Constants.imageSideLength, height: Constants.imageSideLength)
 
             Text(item.name)
         }
     }
     
     private var imgPlaceholder: some View {
-        Image(systemName: "birthday.cake")
+        Image(systemName: Constants.placeholderName)
+    }
+    
+    private struct Constants {
+        static let imageCornerSize: CGSize = .init(width: 8, height: 8)
+        static let imageSideLength: CGFloat = 50
+        static let placeholderName: String = "birthday.cake"
     }
 }
 
