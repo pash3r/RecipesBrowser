@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct RecipesBrowserApp: App {
+    @StateObject private var recipesProvider: RecipesProvider = {
+        let repository = RecipesNetworkRepository()
+        return RecipesProvider(repository: repository)
+    }()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RecipesListView(recipesProvider: recipesProvider)
         }
     }
 }
