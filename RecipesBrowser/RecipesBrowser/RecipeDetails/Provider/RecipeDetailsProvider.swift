@@ -24,7 +24,7 @@ final class RecipeDetailsProvider: ObservableObject {
             let recipe = try await repository.getRecipe(with: id)
             state = .loaded(recipe)
         } catch {
-            state = .error("Something went wrong") // move to app constants
+            state = .error(error)
         }
     }
     
@@ -36,6 +36,6 @@ final class RecipeDetailsProvider: ObservableObject {
         case initial
         case loading
         case loaded(MealDetail)
-        case error(String)
+        case error(Error)
     }
 }
