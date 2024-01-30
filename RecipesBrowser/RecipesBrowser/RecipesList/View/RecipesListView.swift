@@ -34,14 +34,7 @@ struct RecipesListView: View {
         case .loading:
             ProgressView()
         case .loadedRecipes(let array):
-            List(array, id: \.id) { item in
-                NavigationLink {
-                    RecipeDetailView(recipeId: item.id)
-                } label: {
-                    RecipeListRowView(item: item)
-                }
-
-            }
+            makeListView(with: array)
         case .error(let text):
             makeErrorView(with: text)
         }
@@ -51,6 +44,22 @@ struct RecipesListView: View {
         ErrorRetryView(text: text) {
             Task {
                 await recipesProvider.reloadRecipes()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func makeListView(with items: [Meal]) -> some View {
+        if items.isEmpty {
+            RecipesEmptyListView()
+        } else {
+            List(items, id: \.id) { item in
+                NavigationLink {
+                    RecipeDetailView(recipeId: item.id)
+                } label: {
+                    RecipeListRowView(item: item)
+                }
+
             }
         }
     }
