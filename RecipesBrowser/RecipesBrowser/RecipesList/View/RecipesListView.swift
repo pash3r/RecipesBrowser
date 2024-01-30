@@ -32,13 +32,10 @@ struct RecipesListView: View {
                     }
 
                 }
-            case .error(let error):
-                VStack {
-                    Text(error.localizedDescription)
-                    Button("Reload") {
-                        Task {
-                            await recipesProvider.loadRecipes()
-                        }
+            case .error(let text):
+                ErrorRetryView(text: text) {
+                    Task {
+                        await recipesProvider.reloadRecipes()
                     }
                 }
             }
@@ -62,8 +59,9 @@ private extension RecipesListView {
                 result = .loading
             case .loadedRecipes(let array):
                 result = .loadedRecipes(array)
-            case .error(let error):
-                result = .error(error)
+            case .error: // in this case we don't care about actual error, because we always show Retry button
+                let defaultText = "Something went wrong. We already know about the problem and trying to fix it."
+                result = .error(defaultText)
             }
             
             return result
@@ -75,7 +73,7 @@ private extension RecipesListView {
             case initial
             case loading
             case loadedRecipes([Meal])
-            case error(Error)
+            case error(String)
         }
     }
 }

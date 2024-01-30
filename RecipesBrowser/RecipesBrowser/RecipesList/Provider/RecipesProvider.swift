@@ -31,6 +31,11 @@ final class RecipesProvider: ObservableObject {
         }
     }
     
+    @MainActor
+    func reloadRecipes() async {
+        await loadRecipes()
+    }
+    
     enum State {
         case initial
         case loading

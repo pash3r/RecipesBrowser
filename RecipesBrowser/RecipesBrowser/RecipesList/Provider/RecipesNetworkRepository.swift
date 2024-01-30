@@ -63,7 +63,7 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
             let result = try decoder.decode([Meal].self, from: data)
             return result
         } catch {
-            throw RepositoryError.generalError
+            throw RepositoryError.decodingError(error)
         }
     }
     
@@ -77,6 +77,7 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
         case networkError(Error)
         case badResponseCode(Int)
         case generalError
+        case decodingError(Error)
     }
 }
 
