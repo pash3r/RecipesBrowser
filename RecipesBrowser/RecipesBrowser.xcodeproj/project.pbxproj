@@ -91,7 +91,6 @@
 			isa = PBXGroup;
 			children = (
 				37919F7D2B6872BB00C7495D /* Provider */,
-				37919F782B685FED00C7495D /* Model */,
 				37919F752B685ED900C7495D /* View */,
 			);
 			path = RecipesList;
@@ -126,6 +125,7 @@
 		37919F842B6878C600C7495D /* General */ = {
 			isa = PBXGroup;
 			children = (
+				37919F782B685FED00C7495D /* Model */,
 				37D027ED2B68C6AE00CB016F /* Repository */,
 				37919F852B6878D400C7495D /* View */,
 			);
