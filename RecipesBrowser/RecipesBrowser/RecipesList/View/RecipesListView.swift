@@ -69,7 +69,7 @@ private extension RecipesListView {
             case .loadedRecipes(let array):
                 result = .loadedRecipes(array)
             case .error: // in this case we don't care about actual error, because we always show Retry button
-                let defaultText = "Something went wrong. We already know about the problem and trying to fix it."
+                let defaultText = AppConstants.defaultErrorText
                 result = .error(defaultText)
             }
             

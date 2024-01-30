@@ -103,7 +103,7 @@ private extension RecipeDetailView {
             case .loaded(let recipe):
                 result = .loaded(recipe)
             case .error:
-                result = .error("Something went wrong") // use default error text
+                result = .error(AppConstants.defaultErrorText)
             }
             
             return result

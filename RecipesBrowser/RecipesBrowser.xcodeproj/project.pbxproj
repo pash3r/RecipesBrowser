@@ -21,6 +21,7 @@
 		37919F8E2B689A6800C7495D /* RecipeDetailsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37919F8D2B689A6800C7495D /* RecipeDetailsProvider.swift */; };
 		37919F902B689C6300C7495D /* MealDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37919F8F2B689C6300C7495D /* MealDetail.swift */; };
 		37A10EE52B69836900A99FE6 /* IngredientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A10EE42B69836900A99FE6 /* IngredientView.swift */; };
+		37A10EE72B69867100A99FE6 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A10EE62B69867100A99FE6 /* AppConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		37919F8D2B689A6800C7495D /* RecipeDetailsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailsProvider.swift; sourceTree = "<group>"; };
 		37919F8F2B689C6300C7495D /* MealDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetail.swift; sourceTree = "<group>"; };
 		37A10EE42B69836900A99FE6 /* IngredientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientView.swift; sourceTree = "<group>"; };
+		37A10EE62B69867100A99FE6 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				37919F782B685FED00C7495D /* Model */,
 				37D027ED2B68C6AE00CB016F /* Repository */,
 				37919F852B6878D400C7495D /* View */,
+				37A10EE62B69867100A99FE6 /* AppConstants.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				37919F7F2B6872C100C7495D /* RecipesRepository.swift in Sources */,
 				37919F902B689C6300C7495D /* MealDetail.swift in Sources */,
 				37919F7A2B68603600C7495D /* Meal.swift in Sources */,
+				37A10EE72B69867100A99FE6 /* AppConstants.swift in Sources */,
 				37919F672B685E9A00C7495D /* RecipesBrowserApp.swift in Sources */,
 				37919F8E2B689A6800C7495D /* RecipeDetailsProvider.swift in Sources */,
 			);
