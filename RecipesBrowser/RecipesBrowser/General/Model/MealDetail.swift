@@ -30,15 +30,15 @@ struct MealDetail {
 }
 
 extension MealDetail {
-    init?(rawValue: [String: String?]?) {
+    init?(rawValue: [String: String]?) {
         guard let rawValue else {
             return nil
         }
         
-        guard let id = rawValue[CodingKeys.id.rawValue], let id,
-              let name = rawValue[CodingKeys.name.rawValue], let name,
-              let instructions = rawValue[CodingKeys.instructions.rawValue], let instructions,
-              let imgUrlString = rawValue[CodingKeys.imgUrl.rawValue], let imgUrlString else {
+        guard let id = rawValue[CodingKeys.id.rawValue],
+              let name = rawValue[CodingKeys.name.rawValue],
+              let instructions = rawValue[CodingKeys.instructions.rawValue],
+              let imgUrlString = rawValue[CodingKeys.imgUrl.rawValue] else {
             return nil
         }
         
@@ -52,7 +52,7 @@ extension MealDetail {
         var ingredients = [Ingredient]()
         
         for (key, value) in rawValue {
-            guard let value, !value.isEmpty else {
+            guard !value.isEmpty else {
                 continue
             }
                                     
@@ -68,7 +68,7 @@ extension MealDetail {
         measurementKeys.sort()
         
         zip(ingredientKeys, measurementKeys).forEach { ingredient, measurement in
-            if let name = rawValue[ingredient], let name, let value = rawValue[measurement], let value {
+            if let name = rawValue[ingredient], let value = rawValue[measurement] {
                 ingredients.append(Ingredient(name: name, value: value))
             }
         }

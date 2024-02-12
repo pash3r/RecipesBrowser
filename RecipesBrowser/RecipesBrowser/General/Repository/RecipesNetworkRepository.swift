@@ -142,7 +142,8 @@ final class RecipesNetworkRepository: RecipesRepositoryDescription {
         let meals: [[String: String?]]
 
         var mealDetails: MealDetail? {
-            MealDetail(rawValue: meals.first)
+            let meal = meals.first?.compactMapValues { $0 }
+            return MealDetail(rawValue: meal)
         }
     }
     
