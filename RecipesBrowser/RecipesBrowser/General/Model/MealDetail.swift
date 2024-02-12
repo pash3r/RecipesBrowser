@@ -64,6 +64,9 @@ extension MealDetail {
             }
         }
         
+        ingredientKeys.sort()
+        measurementKeys.sort()
+        
         zip(ingredientKeys, measurementKeys).forEach { ingredient, measurement in
             if let name = rawValue[ingredient], let name, let value = rawValue[measurement], let value {
                 ingredients.append(Ingredient(name: name, value: value))
