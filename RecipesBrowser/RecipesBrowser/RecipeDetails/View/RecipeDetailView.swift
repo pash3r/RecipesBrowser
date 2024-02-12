@@ -129,5 +129,6 @@ private extension RecipeDetailView {
 #if DEBUG
 #Preview {
     RecipeDetailView(recipeId: "")
+        .environmentObject(RecipeDetailsProvider(repository: RecipesPreviewRepository()))
 }
 #endif

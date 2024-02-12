@@ -86,13 +86,3 @@ extension MealDetail {
     private static let ingredientNamePrefix = "strIngredient"
     private static let ingredientMeasurementPrefix = "strMeasure"
 }
-
-extension MealDetail {
-    static let preview: Self = {
-        MealDetail(id: "53062",
-                   name: "Walnut Roll Gu\\u017evara",
-                   instructions: "Mix all the ingredients for the dough together and knead well. Cover the dough and put to rise until doubled in size which should take about 2 hours. Knock back the dough and knead lightly.\r\n\r\nDivide the dough into two equal pieces; roll each piece into an oblong about 12 inches by 8 inches. Mix the filling ingredients together and divide between the dough, spreading over each piece. Roll up the oblongs as tightly as possible to give two 12 inch sausages. Place these side by side, touching each other, on a greased baking sheet. Cover and leave to rise for about 40 minutes. Heat oven to 200\\u00baC (425\\u00baF). Bake for 30-35 minutes until well risen and golden brown. Bread should sound hollow when the base is tapped.\r\n\r\nRemove from oven and brush the hot bread top with milk. Sift with a generous covering of icing sugar.",
-                   imgUrl: URL(string: "https://www.themealdb.com/images/media/meals/u9l7k81628771647.jpg"),
-                   ingredients: [])
-    }()
-}
